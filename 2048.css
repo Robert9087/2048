@@ -1,0 +1,33 @@
+body {
+    text-align: center;
+}
+
+#board {
+    width: 400px;
+    height: 400px;
+
+    background-color: burlywood;
+    border: 6px solid rgb(174, 255, 0);
+
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tiles {
+    width: 90px;
+    height: 90px;
+
+    background-color: antiquewhite;
+    border: 5px solid burlywood;
+
+    font-size: 40px;
+    font-weight: bold;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.x2 {
+    background-color: antiquewhite;
+}
