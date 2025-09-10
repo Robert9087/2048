@@ -2,7 +2,7 @@ var board;
 var score = 0;
 var columns = 4;
 var rows = 4;
-
+var score = 0
 
 window.onload = function() {
     start();
@@ -27,84 +27,110 @@ function start() {
     }
 
     adding();
-    adding()
+    adding();
 }
 
 function classify(unit, num) {
     if (num != 0) {
         unit.innerText = num;
     }
-    else {
+    else if (num == 0) {
+        unit.classList.value = "tiles x0";
         unit.innerText = "";
+        return;
     }
     unit.classList.value = "tiles";
     //unit.classList.add("tiles");
 }
 
 document.addEventListener("keyup", (e) => {
+    a = false
     if (e.code == "ArrowLeft") {
-        slideLeft();
-        adding();
-        adding();
+        a = slideLeft();
+        //console.log(a, "<")
     }
     else if (e.code == "ArrowRight") {
-        slideRight();
-        adding();
-        adding();
+        a = slideRight();
+        //console.log(a)
     }
     else if (e.code == "ArrowUp") {
-        slideUp();
-        adding();
-        adding();
+        a = slideUp();
     }
     else if (e.code == "ArrowDown") {
-        slideDown();
-        adding();
-        adding();
+        a = slideDown();
     }
+    else {
+        return;
+    }
+    if (!a) {
+        if (!dublicate_or_empty()) {
+            console.log("game over");
+            return;
+        }
+        return;
+    }
+    adding();
 })
 
 
 function slideLeft() {
+    changes = false;
     for (let i = 0; i < rows; i++) {
         temp = slide(board[i]);
-        board[i] = temp;
         for (let j=0; j<columns;j++) {
+            if (board[i][j] != temp[j]) {
+                changes = true;
+            }
+            board[i][j] = temp[j];
             perm = document.getElementById(i.toString() + "-" + j.toString());
             classify(perm, board[i][j]);
         }
     }
+    return changes;
 }
 
 function slideRight() {
+    changes = false;
     for (let i = 0; i < rows; i++) {
         temp = board[i].reverse();
-        console.log(board[i]);
+        //console.log(board[i]);
         temp = slide(board[i]);
         //console.log(temp);
-        board[i] = temp.reverse();
+        temp = temp.reverse();
         for (let j=0; j<columns;j++) {
+            if (board[i][j] != temp[3-j]) {
+                changes = true;
+                //console.log(board[i], temp, i, j)
+            }
+            board[i][j] = temp[j];
             perm = document.getElementById(i.toString() + "-" + j.toString());
             classify(perm, board[i][j]);
         }
     }
+    return changes;
 }
 
 function slideUp() {
+    changes = false;
     for (let j = 0; j < columns; j++) {
         temp = board.map(r => r[j]);
         //console.log(temp, j)
         temp = slide(temp);
-        console.log(temp)
+        //console.log(temp)
         for (let i = 0; i < rows; i++) {
+            if (board[i][j] != temp[i]) {
+                changes = true;
+            }
             board[i][j] = temp[i];
             perm = document.getElementById(i.toString() + "-" + j.toString());
             classify(perm, board[i][j]);
         }
     }
+    return changes;
 } 
 
 function slideDown() {
+    changes = false;
     for (let j = 0; j < columns; j++) {
         temp = board.map(r => r[j]);
         temp.reverse();
@@ -113,11 +139,15 @@ function slideDown() {
         temp.reverse();
         //console.log(temp)
         for (let i = 0; i < rows; i++) {
+            if (board[i][j] != temp[i]) {
+                changes = true;
+            }
             board[i][j] = temp[i];
             perm = document.getElementById(i.toString() + "-" + j.toString());
             classify(perm, board[i][j]);
         }
     }
+    return changes;
 }
 
 
@@ -131,6 +161,9 @@ function slide(l) {
         if (l[i] == l[i + 1]) {
             l[i] *= 2;
             l[i+1] = 0;
+            score += l[i];
+            sc = document.getElementById('Score');
+            sc.innerText = score;
         }
     }
     l = filt(l);
@@ -143,7 +176,9 @@ function slide(l) {
 }
 
 function adding() {
-    if (!isEmpty()) {return}
+    if (!isEmpty()) {                                   //need rework
+        return;
+    }
 
     let aval = true;
 
@@ -157,16 +192,37 @@ function adding() {
             aval = false;
         }
     }
+    score += 2;
+    sc = document.getElementById('Score');
+    sc.innerText = score;
 
 }
 
 function isEmpty() {
     for (let i = 0; i < 4; i++) {
-        for(let j=0; j<4; j++) {
+        for(let j=0; j<4; j++) {                            //check if player have losed here
             if (board[i][j] == 0) {
                 return true
             }
         }
     }
     return false
+}
+
+function dublicate_or_empty() {
+    for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+            const current = board[i][j];
+            if (current == 0) {
+                return true;
+            }
+            if (i + 1 < 4 && current == board[i + 1][j]) {
+                return true;
+            }
+            if (j + 1 < 4 && current == board[i][j + 1]) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
