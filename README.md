@@ -3,4 +3,5 @@ first project in js/html/css.
 task:
     - tiles design
     - tiles animation
-    - score counting
+    - score counting    ----> done
+    - debugging         ----> done

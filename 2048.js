@@ -10,10 +10,10 @@ window.onload = function() {
 
 function start() {
     board = [
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0]
+        [1, 2, 3, 4],
+        [8, 7, 6, 5],
+        [9, 10, 11, 12],
+        [0, 0, 0, 13]
     ]
 
     for (let r = 0; r < rows; r++) {
@@ -64,8 +64,7 @@ document.addEventListener("keyup", (e) => {
     }
     if (!a) {
         if (!dublicate_or_empty()) {
-            console.log("game over");
-            return;
+            return end();
         }
         return;
     }
@@ -195,6 +194,11 @@ function adding() {
     score += 2;
     sc = document.getElementById('Score');
     sc.innerText = score;
+    
+    if (!dublicate_or_empty()){
+        console.log("over");
+        return end();
+    }
 
 }
 
@@ -225,4 +229,12 @@ function dublicate_or_empty() {
         }
     }
     return false;
+}
+
+
+function end() {
+    setTimeout(function() {
+        alert("game over");
+        location.reload();
+    }, 2000);
 }
